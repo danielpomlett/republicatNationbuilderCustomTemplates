@@ -1,0 +1,110 @@
+<div id="content">
+
+  <div class="progressWrapper clearfix">
+      {% if request.current_user.tags contains "REG-alta" %}
+      <div class="progressIcon">
+        <span class="icon icon01"></span>
+        <span class="popUp progressNote positive"><span>Pas1. Alta està completa</span></span>
+        <span class="iconLabel">Alta</span>
+      </div>
+      {% else %}
+      <a class="progressIcon" href="/alta">
+         <span class="icon icon01 unfinished"></span>
+        <span class="popUp progressNote negative"><span>Pas1. Alta no feta</span></span>
+        <span class="iconLabel unfinished">Alta</span>
+      </a>
+    {% endif %}
+
+    {% if request.current_user.tags contains "REG-adhesio" %}
+      <div class="progressIcon">
+        <span class="icon icon02"></span>
+        <span class="popUp progressNote positive"><span>Pas2. Adhesió està completa</span></span>
+        <span class="iconLabel">Adhesió</span>
+      </div>
+      {% else %}
+      <a class="progressIcon" href="/adhesio">
+         <span class="icon icon02 unfinished"></span>
+        <span class="popUp progressNote negative"><span>Pas2. Adhesió no feta</span></span>
+        <span class="iconLabel unfinished">Adhesió</span>
+      </a>
+    {% endif %}
+
+    {% if request.current_user.tags contains "REG-identificacio" %}
+      <div class="progressIcon">
+        <span class="icon icon03"></span>
+        <span class="popUp progressNote positive"><span>Pas3. Identificació està completa</span></span>
+        <span class="iconLabel">Identificació</span>
+      </div>
+      {% else %}
+      <a class="progressIcon" href="/identificacio">
+         <span class="icon icon03 unfinished"></span>
+        <span class="popUp progressNote negative"><span>Pas3. Identificació no feta</span></span>
+        <span class="iconLabel unfinished">Identificació</span>
+      </a>
+    {% endif %}
+
+    {% if request.current_user.tags contains "REG-taxa_pagada" %}
+      <div class="progressIcon">
+        <span class="icon icon04"></span>
+        <span class="popUp progressNote positive"><span>Pas4. Pagament taxa està completa</span></span>
+        <span class="iconLabel">Pagament</span>
+      </div>
+      {% else %}
+      <a class="progressIcon" href="/pagament">
+         <span class="icon icon04 unfinished"></span>
+        <span class="popUp progressNote negative"><span>Pas4. Pagament taxa no feta</span></span>
+        <span class="iconLabel unfinished">Pagament</span>
+      </a>
+    {% endif %}
+
+    <div class="progressIcon activeStage">
+      <span class="icon icon05 activeStage"></span>
+      <span class="popUp progressNote"><span>Pas5. Identitat validada</span></span>
+      <span class="iconLabel">Validació</span>
+    </div>
+
+  </div>
+  <div class="signUpProcessWrapper">
+    <div class="signUpProcessInner">
+      {% if request.sorta_logged_in? %}
+        {% if request.current_user.tags contains "REG-adhesio" %} {% assign adhesio = true %}{% else %}{% assign adhesio = false %}{% endif %}
+        {% if request.current_user.tags contains "REG-identificacio" %} {% assign identificacio = true %}{% else %}{% assign identificacio = false %}{% endif %}
+        {% if request.current_user.tags contains "REG-taxa_pagada" %} {% assign taxa_pagada = true %}{% else %}{% assign taxa_pagada = false %}{% endif %}
+        {% if request.current_user.tags contains "JUM-Validat" %} {% assign JUM-Validat = true %}{% else %}{% assign JUM-Validat = false %}{% endif %}
+
+        {% if JUM-Validat == false %}
+        <div id="intro" class="intro">
+          <div class="text-content">
+            {{ page.basic.content }}
+          </div>
+        </div>
+        {% elsif adhesio == false %}
+          <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="/adhesio">Pas2. Adhesió</a></p>
+          <script>
+            window.location.replace("/adhesio");
+          </script>
+        {% elsif identificacio == false %}
+          <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="/identificacio">Pas3. Identificació</a></p>
+          <script>
+            window.location.replace("/identificacio");
+          </script>
+        {% elsif taxa_pagada == false %}
+          <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="/pagament">Pas4. Pagament</a></p>
+          <script>
+            window.location.replace("/pagament");
+          </script>
+        {% else %}
+        {% endif %}
+      {% else %}
+        <script>
+         var getUrl = window.location;
+          var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+          window.location.replace("/alta");
+        </script>
+      {% endif %}
+      </div>
+    </div>
+  {% include "like_page" %}
+
+
+</div>

@@ -1,0 +1,198 @@
+<div class="flex">
+  <div class="pageHeightWrapper">
+    <div id="content">
+
+      <div class="progressWrapper clearfix">
+        <div class="progressIcon activeStage">
+          <span class="icon icon01 activeStage"></span>
+          <span class="iconLabel">Alta</span>
+        </div>
+      {% if request.current_user.tags contains "REG-alta" %}
+        {% if request.current_user.tags contains "REG-adhesio" %}
+          <div class="progressIcon">
+            <span class="icon icon02"></span>
+            <span class="popUp progressNote positive"><span>Pas2. Adhesió està completa</span></span>
+            <span class="iconLabel">Adhesió</span>
+          </div>
+          {% else %}
+          <a class="progressIcon" href="/adhesio">
+             <span class="icon icon02 unfinished"></span>
+            <span class="popUp progressNote negative"><span>Pas2. Adhesió no feta</span></span>
+            <span class="iconLabel unfinished">Adhesió</span>
+          </a>
+        {% endif %}
+
+        {% if request.current_user.tags contains "REG-identificacio" %}
+          <div class="progressIcon">
+            <span class="icon icon03"></span>
+            <span class="popUp progressNote positive"><span>Pas3. Identificació està completa</span></span>
+            <span class="iconLabel">Identificació</span>
+          </div>
+          {% else %}
+          <a class="progressIcon" href="/identificacio">
+             <span class="icon icon03 unfinished"></span>
+            <span class="popUp progressNote negative"><span>≈</span></span>
+            <span class="iconLabel unfinished">Identificació</span>
+          </a>
+        {% endif %}
+
+        {% if request.current_user.tags contains "REG-taxa_pagada" %}
+          <div class="progressIcon">
+            <span class="icon icon04"></span>
+            <span class="popUp progressNote positive"><span>Pas4. Pagament taxa està completa</span></span>
+            <span class="iconLabel">Pagament</span>
+          </div>
+          {% else %}
+          <a class="progressIcon" href="/pagament">
+             <span class="icon icon04 unfinished"></span>
+            <span class="popUp progressNote negative"><span>Pas4. Pagament taxa no feta</span></span>
+            <span class="iconLabel unfinished">Pagament</span>
+          </a>
+        {% endif %}
+
+        {% if request.current_user.tags contains "JUM-Validat" %}
+          <div class="progressIcon">
+            <span class="icon icon05"></span>
+            <span class="popUp progressNote positive"><span>Pas5. Validació està completa</span></span>
+            <span class="iconLabel">Validació</span>
+          </div>
+          {% else %}
+          <a class="progressIcon" href="/validacio">
+             <span class="icon icon05 unfinished"></span>
+            <span class="popUp progressNote negative"><span>Pas5. Validació no feta</span></span>
+            <span class="iconLabel unfinished">Validació</span>
+          </a>
+        {% endif %}
+      {% else %} 
+        <div class="progressIcon">
+          <span class="icon icon02 unfinished"></span>
+          <span class="popUp progressNote negative"><span>Pas2. Adhesió als valors de la República</span></span>
+          <span class="iconLabel unfinished">Adhesió</span>
+        </div>
+        <div class="progressIcon">
+          <span class="icon icon03 unfinished"></span>
+          <span class="popUp progressNote negative"><span>Pas3. Identificació dades ID/Passaport</span></span>
+          <span class="iconLabel unfinished">Identificació</span>
+        </div>
+        <div class="progressIcon">
+          <span class="icon icon04 unfinished"></span>
+          <span class="popUp progressNote negative"><span>Pas4. Pagament taxa</span></span>
+          <span class="iconLabel unfinished">Pagament</span>
+        </div>
+        <div class="progressIcon">
+          <span class="icon icon05 unfinished"></span>
+          <span class="popUp progressNote unfinished"><span>Pas5. Identitat validada</span></span>
+          <span class="iconLabel unfinished">Validació</span>
+        </div>
+      {% endif %} 
+
+      </div>
+      <div class="signUpProcessWrapper">
+        <div class="signUpProcessInner">
+          {% if request.sorta_logged_in? %}
+                {% if request.current_user.tags contains "REG-adhesio" %} {% assign adhesio = true %}{% else %}{% assign adhesio = false %}{% endif %}
+                {% if request.current_user.tags contains "REG-identificacio" %} {% assign identificacio = true %}{% else %}{% assign identificacio = false %}{% endif %}
+                {% if request.current_user.tags contains "REG-taxa_pagada" %} {% assign taxa_pagada = true %}{% else %}{% assign taxa_pagada = false %}{% endif %}
+                {% if request.current_user.tags contains "JUM-Validat" %} {% assign JUM-Validat = true %}{% else %}{% assign JUM-Validat = false %}{% endif %}
+                {% if adhesio == false %}
+                  <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="https://republicat.nationbuilder.com/registre2">Pas2. Adhesió</a></p>
+                  <script>
+                    window.location.replace("/adhesio");
+                  </script>
+
+                {% elsif identificacio == false %}
+                  <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="https://republicat.nationbuilder.com/identificacio">Pas3. Identificació</a></p>
+                  <script>
+                    window.location.replace("/identificacio");
+                  </script>
+                {% elsif taxa_pagada == false %}
+                  <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="https://republicat.nationbuilder.com/pagament">Pas34. Pagament</a></p>
+                  <script>
+                    window.location.replace("/pagament");
+                  </script>
+                {% elsif JUM-Validat == false %}
+                  <p> Hola {{ request.current_signup.name_or_email }}, pots continuar amb el <a href="https://republicat.nationbuilder.com/validacio">Pas5. Validació</a></p>
+                  <script>
+                    window.location.replace("/validacio");
+                  </script>
+                {% else %}
+                {% endif %}
+          {% else %}
+            {% if page.signup.content.size > 0 %}
+            <div id="intro" class="intro">
+              {{ page.signup.content }}
+            </div>
+            {% endif %}
+
+            <div class="form-wrap signUpForm">
+              <div class="form">
+
+                {% form_for signup %}
+
+                <div class="form-errors">{% error_messages_for signup %}</div>
+
+                  {% if request.sorta_logged_in? == false or request.current_signup.has_mobile? == false %}
+                  <div class="signup"><label for="signup_email">Adreça electrònica <span class="helpWrapper"><span class="helpIcon">?</span><span class="popUp"><span class="popCopy">This is a help pop up <span class="close">X</span></span></span></span></label>{% email_field "email", class:"text" %}</div>
+               
+
+                  {% endif %}
+
+                  {% if page.signup.is_phone? %}
+                  <div class="row-fluid">
+                    <div class="span12"><label for="signup_phone_number">Phone</label>{% phone_field "phone_number", class:"text" %}</div>
+                  </div>
+                  {% endif %}
+
+                {% if page.signup.is_volunteers? and site.ask_for_volunteers? %}
+                  {% if request.sorta_logged_in? == false or request.current_signup.is_volunteer == false %}
+                  <div class="row-fluid">
+                    <div class="span12"><label class="checkbox" for="signup_is_volunteer">{% check_box "is_volunteer", class:"checkbox" %} I want to volunteer</label></div>
+                  </div>
+                  {% endif %}
+                {% endif %}
+
+
+
+                {% if page.show_consent_form? %}{% include "consent_form" %}{% endif %}
+
+                {% if page.signup.is_all_info_collected? == false %}
+                {% if request.sorta_logged_in? %}
+                {% else %}
+                {% submit_tag "Valida l'adreça", class:"submit-button" %}
+                {% endif %}
+                {% endif %}
+
+                
+                
+                <div class="form-submit"></div>
+
+                {% endform_for %}
+
+                {% if page.text_keyword_instructions.size > 0 %}
+                <div class="row-fluid padbottom padtopmore">
+                  <div class="span12">
+                  or {{ page.text_keyword_instructions }}
+                  </div>
+                </div>
+                {% endif %}
+
+
+              </div>
+            </div>
+           {% endif %}
+          </div>
+        </div>
+
+        <p>Si vols donar d'alta una altra persona ho has de fer amb una adreça diferent. <a href="{{ request.current_signup.logout_url }}"> Clica aquí per canviar de persona.</a>.</p>
+      </div>
+
+      <div class="like-page">
+        <strong>Comparteix la pàgina, que tothom pugui fer com tu!</strong>
+        {% include "like_page" %}
+      </div>
+
+      {% if page.show_stream? %}
+      {% include "page_stream" %}
+      {% endif %}
+    </div>
+</div>
